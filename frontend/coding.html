@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Interview Chatbot</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <header>
+    <h1>Ultimate Career Hub</h1>
+    <p>Your one-stop portal for roadmaps, jobs, interviews & resume tips</p>
+    <nav></nav>
+  </header>
+
+  <main>
+    <section>
+      <section>
+        <h2>🧠 Mock Coding </h2>
+
+        <div class="editor-container">
+          <div class="editor-toolbar">
+            <select id="languageSelector" onchange="changeLanguage()">
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+              <option value="c">C</option>
+              <option value="java">Java</option>
+              <option value="html">HTML</option>
+              <option value="css">CSS</option>
+            </select>
+            
+
+            <select id="themeSelector" onchange="changeTheme()">
+              <option value="vs-dark">Dark</option>
+              <option value="vs-light">Light</option>
+            </select>
+
+            <select id="fontSizeSelector" onchange="changeFontSize()">
+              <option value="14">14px</option>
+              <option value="16">16px</option>
+              <option value="18">18px</option>
+            </select>
+          </div>
+
+          <div id="editor"></div>
+        </div>
+
+
+
+
+        <div class="button-group">
+          <button class="btn run" onclick="runCode()">▶ Run Code</button>
+          <button class="btn ai" onclick="submitToAI()">🤖 Get AI Feedback</button>
+          <!-- Normal mode button (your chosen position) -->
+          <button id="enterFullscreenBtn" class="btn fullscreen-toggle" onclick="toggleFullscreen()">⛶
+            Fullscreen</button>
+
+          <!-- Exit fullscreen button (fixed top-right, hidden by default) -->
+          <button id="exitFullscreenBtn" class=" btn fullscreen-exit-btn" onclick="toggleFullscreen()"
+            style="display: none;">⤫ Exit</button>
+        </div>
+
+        <div class="terminal-container">
+          <div class="terminal-header">🧪 Terminal</div>
+          <pre id="terminalOutput" class="terminal-output">Run code to see output...</pre>
+        </div>
+
+        <h3>🤖 AI Feedback:</h3>
+        <div id="aiFeedback" class="output-box" style="white-space: pre-wrap;"></div>
+
+
+
+      </section>
+    </section>
+
+  </main>
+  <section>
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- Column 1: Logo and About -->
+        <div class="footer-column">
+          <h2 class="footer-logo">Ultimate Career <span>Hub</span></h2>
+          <p>Your one-stop platform for career growth, job hunting, and interview mastery.</p>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="roadmap.html">Career Roadmap</a></li>
+            <li><a href="jobs.html">Internships & Jobs</a></li>
+            <li><a href="interview.html">Interview Prep</a></li>
+            <li><a href="resume.html">Resume Review</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Connect -->
+        <div class="footer-column">
+          <h3>Connect</h3>
+          <p>Email: <a href="mailto:support@careerhub.com">support@careerhub.com</a></p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>CopyRight &copy; 2025 Ultimate Career Hub. All rights reserved.</p>
+        <p>Devloped By - Ajay Kumar</p>
+      </div>
+
+      <button class="back-to-top" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+    </footer>
+  </section>
+
+  <script src="auth.js"></script>
+  <script src="main.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"></script>
+  <script>
+    let editorInstance;
+
+    require.config({ paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs" } });
+
+    require(["vs/editor/editor.main"], function () {
+      editorInstance = monaco.editor.create(document.getElementById("editor"), {
+        value: `// Type your code here\n\nfunction helloWorld() {\n  console.log("Hello, world!");\n}\n\nhelloWorld();`
+        ,
+        language: "javascript",
+        theme: "vs-dark",
+        automaticLayout: true,
+        fontSize: 20,
+        fontFamily: "Fira Code, monospace",
+        minimap: { enabled: false },
+        wordWrap: "on",
+        scrollBeyondLastLine: false,
+        lineNumbers: "on",
+        roundedSelection: false,
+        scrollBeyondLastColumn: 5
+      });
+    });
+
+    async function runCodeWithPiston(language, code) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ language, code }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          return `Error: ${data.error || `Code execution failed (HTTP ${response.status}).`}`;
+        }
+        return data.output;
+      } catch (error) {
+        console.error("Code execution failed:", error);
+        return `Error: ${error.message || "Could not run code. Please try again."}`;
+      }
+    }
+
+    function runWebPreview(language, code) {
+      const terminal = document.getElementById("terminalOutput");
+      let preview = document.getElementById("webPreview");
+      if (!preview) {
+        preview = document.createElement("iframe");
+        preview.id = "webPreview";
+        preview.title = "HTML/CSS preview";
+        preview.sandbox = "";
+        preview.style.cssText = "width:100%; min-height:240px; margin-top:12px; border:1px solid #334155; border-radius:6px; background:#fff;";
+        document.querySelector(".terminal-container").appendChild(preview);
+      }
+      preview.srcdoc = language === "html"
+        ? code
+        : `<style>${code}</style><main><h1>CSS Preview</h1><p>Edit the CSS to style this preview.</p><button>Sample button</button></main>`;
+      preview.hidden = false;
+      terminal.innerText = "Rendered browser preview below.";
+    }
+
+
+
+    window.runCode = async function () {
+      const langMap = {
+        javascript: 'javascript',
+        python: 'python',
+        cpp: 'cpp',
+        c: 'c',
+        java: 'java',
+        html: 'html',
+        css: 'css'
+      };
+
+      const selectedLang = document.getElementById("languageSelector").value;
+      const pistonLang = langMap[selectedLang] || 'javascript';
+      const code = editorInstance.getValue();
+
+      if (selectedLang === "html" || selectedLang === "css") {
+        runWebPreview(selectedLang, code);
+        return;
+      }
+
+      const preview = document.getElementById("webPreview");
+      if (preview) preview.hidden = true;
+
+      document.getElementById("terminalOutput").innerText = "Running code...";
+      const output = await runCodeWithPiston(pistonLang, code);
+
+      document.getElementById("terminalOutput").innerText = output || "✅ Code ran successfully. No output.";
+    };
+
+
+
+    window.toggleFullscreen = function () {
+      const container = document.querySelector(".editor-container");
+      const enterBtn = document.getElementById("enterFullscreenBtn");
+      const exitBtn = document.getElementById("exitFullscreenBtn");
+
+      const isFullscreen = container.classList.toggle("fullscreen");
+      editorInstance.layout();
+
+      // Toggle visibility of buttons
+      if (isFullscreen) {
+        enterBtn.style.display = "none";
+        exitBtn.style.display = "block";
+      } else {
+        enterBtn.style.display = "inline-block";
+        exitBtn.style.display = "none";
+      }
+    };
+
+    window.changeLanguage = function () {
+  const lang = document.getElementById("languageSelector").value;
+
+  const monacoLangMap = {
+    javascript: "javascript",
+    python: "python",
+    cpp: "cpp",
+    c: "c",
+    java: "java",
+    html: "html",
+    css: "css"
+  };
+
+  const monacoLang = monacoLangMap[lang] || "javascript";
+  monaco.editor.setModelLanguage(editorInstance.getModel(), monacoLang);
+};
+
+
+    window.changeTheme = function () {
+      const theme = document.getElementById("themeSelector").value;
+      monaco.editor.setTheme(theme);
+    };
+
+    window.changeFontSize = function () {
+      const size = parseInt(document.getElementById("fontSizeSelector").value);
+      editorInstance.updateOptions({ fontSize: size });
+    };
+
+    window.submitToAI = async function () {
+      if (!editorInstance) return alert("Editor not ready");
+      const code = editorInstance.getValue();
+      const language = document.getElementById("languageSelector").value;
+      const feedbackEl = document.getElementById("aiFeedback");
+      feedbackEl.innerText = "Loading AI feedback...";
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/code-review`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code, language }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.error || "Could not get AI feedback.");
+        }
+        feedbackEl.innerText = data.feedback || "No feedback received.";
+      } catch (error) {
+        console.error("Code review failed:", error);
+        feedbackEl.innerText = `⚠️ ${error.message}`;
+      }
+    };
+
+
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const container = document.querySelector('.editor-container');
+        const exitBtn = document.getElementById("exitFullscreenBtn");
+        const enterBtn = document.getElementById("enterFullscreenBtn");
+
+        if (container.classList.contains('fullscreen')) {
+          container.classList.remove('fullscreen');
+          exitBtn.style.display = "none";
+          enterBtn.style.display = "inline-block";
+          editorInstance.layout();
+        }
+      }
+    });
+
+
+  </script>
+
+</body>
+
+</html>

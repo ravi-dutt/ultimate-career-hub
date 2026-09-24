@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Dashboard</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>Ultimate Career Hub</h1>
+    <p>Your one-stop portal for roadmaps, jobs, interviews & resume tips</p>
+    <nav></nav>
+  </header>
+
+  <main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const dashboardUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (dashboardUser) {
+          document.querySelector("h2").innerText = `Welcome, ${dashboardUser.name}`;
+        }
+      });
+    </script>
+    <section>
+      <section class="resume-section">
+        <h2>📊 Dashboard Summary</h2>
+        <p>View your saved jobs, roadmap progress, and resume tips below.</p>
+
+        <section class="dashboard-block">
+          <h3>⭐ Saved Jobs</h3>
+          <ul id="savedJobs"></ul>
+        </section>
+
+        <section class="dashboard-block">
+          <h3>📈 Roadmap Progress</h3>
+          <ul id="roadmapProgress"></ul>
+        </section>
+
+        <section class="dashboard-block">
+          <h3>📄 Resume Tips Completed</h3>
+          <ul id="resumeTips"></ul>
+        </section>
+
+
+
+
+      </section>
+    </section>
+  </main>
+
+  <section>
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- Column 1: Logo and About -->
+        <div class="footer-column">
+          <h2 class="footer-logo">Ultimate Career <span>Hub</span></h2>
+          <p>Your one-stop platform for career growth, job hunting, and interview mastery.</p>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="roadmap.html">Career Roadmap</a></li>
+            <li><a href="jobs.html">Internships & Jobs</a></li>
+            <li><a href="interview.html">Interview Prep</a></li>
+            <li><a href="resume.html">Resume Review</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Connect -->
+        <div class="footer-column">
+          <h3>Connect</h3>
+          <p>Email: <a href="mailto:support@careerhub.com">support@careerhub.com</a></p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>CopyRight &copy; 2025 Ultimate Career Hub. All rights reserved.</p>
+        <p>Devloped By - Ajay Kumar</p>
+      </div>
+
+      <button class="back-to-top" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+    </footer>
+  </section>
+
+  <script>
+    const savedJobsList = document.getElementById("savedJobs");
+    const savedJobs = JSON.parse(localStorage.getItem("savedJobs") || "[]");
+    savedJobsList.innerHTML = savedJobs.length
+      ? savedJobs.map(job => `<li>💼 ${job}</li>`).join("")
+      : "<li>No saved jobs yet.</li>";
+
+    const roadmapProgressList = document.getElementById("roadmapProgress");
+    const keys = Object.keys(localStorage).filter(k => k.includes("roadmap.html-step") && localStorage[k]);
+
+    // Group completed steps by their roadmap block heading
+    const grouped = {};
+    keys.forEach(k => {
+      let data;
+      try {
+        data = JSON.parse(localStorage.getItem(k));
+      } catch (e) {
+        // Fallback for old string-format entries
+        data = { block: "General Roadmap", title: localStorage.getItem(k) };
+      }
+      if (!grouped[data.block]) grouped[data.block] = [];
+      grouped[data.block].push(data.title);
+    });
+
+    // Build HTML with block headings and separated sub-blocks
+    let html = "";
+    Object.keys(grouped).forEach(block => {
+      html += `<li class="roadmap-block-heading">📂 ${block}</li>`;
+      grouped[block].forEach(title => {
+        html += `<li class="roadmap-sub-step">✅ ${title}</li>`;
+      });
+    });
+
+    roadmapProgressList.innerHTML = html || "<li>No roadmap steps completed yet.</li>";
+
+    const resumeTipsList = document.getElementById("resumeTips");
+    resumeTipsList.innerHTML = "<li>📝 Add more project highlights</li><li>📧 Ensure contact info is included</li>";
+  </script>
+  <script src="auth.js"></script>
+  <script src="main.js"></script>
+
+
+
+
+</body>
+
+</html>

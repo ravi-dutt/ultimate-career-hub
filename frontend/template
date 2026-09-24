@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Interview Chatbot</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>Ultimate Career Hub</h1>
+    <p>Your one-stop portal for roadmaps, jobs, interviews & resume tips</p>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="roadmap.html">Career Roadmap</a></li>
+        <li><a href="jobs.html">Internships & Jobs</a></li>
+        <li><a href="interview.html">Interview Prep</a></li>
+        <li><a href="resume.html">Resume Tips</a></li>
+        <li><a href="chatbot.html">Mock Interview Bot</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <span id="userLinks" style="display: none;">
+          <li><span id="navbarUser"></span></li>
+          <li><a href="#" id="logoutBtn">Logout</a></li>
+        </span>
+      </ul>
+    </nav>
+  </header>
+
+
+
+
+  <section>
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- Column 1: Logo and About -->
+        <div class="footer-column">
+          <h2 class="footer-logo">Ultimate Career <span>Hub</span></h2>
+          <p>Your one-stop platform for career growth, job hunting, and interview mastery.</p>
+        </div>
+    
+        <!-- Column 2: Quick Links -->
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="roadmap.html">Career Roadmap</a></li>
+          <li><a href="jobs.html">Internships & Jobs</a></li>
+          <li><a href="interview.html">Interview Prep</a></li>
+          <li><a href="resume.html">Resume Review</a></li>
+          </ul>
+        </div>
+    
+        <!-- Column 3: Connect -->
+        <div class="footer-column">
+          <h3>Connect</h3>
+          <p>Email: <a href="mailto:support@careerhub.com">support@careerhub.com</a></p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="footer-bottom">
+        <p>CopyRight &copy; 2025 Ultimate Career Hub. All rights reserved.</p>
+        <p>Devloped By - Ajay Kumar</p>
+      </div>
+    
+      <button class="back-to-top" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+    </footer>
+  </section>
+
+  <script src="main.js"></script>
+  <script src="auth.js"></script>
+
+</body>
+
+</html>

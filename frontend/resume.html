@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Review</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>Ultimate Career Hub</h1>
+    <p>Your one-stop portal for roadmaps, jobs, interviews & resume tips</p>
+    <nav></nav>
+  </header>
+
+  <main>
+    <section>
+      <section>
+        <!-- AI Career Tools Tab Bar -->
+        <div class="ai-tools-tab-bar" role="tablist">
+          <button type="button" class="ai-tools-tab-btn active"
+            id="tab-resume-review"
+            onclick="switchAIToolTab('resume-review')"
+            role="tab" aria-selected="true">📄 Resume Review</button>
+          <button type="button" class="ai-tools-tab-btn"
+            id="tab-skill-gap-analyzer"
+            onclick="switchAIToolTab('skill-gap-analyzer')"
+            role="tab" aria-selected="false">🧠 Skill Gap Analyzer</button>
+        </div>
+
+        <!-- AI Career Tools Tab Panels -->
+        <div class="ai-tools-tab-container">
+          <section id="resume-review" class="ai-tools-tab-panel active">
+            <h2>📄 Resume Review & Smart Tips</h2>
+            <p>Upload your resume (PDF) to get quick insights and improvements.</p>
+
+            <div class="resume-upload">
+              <input type="file" id="resumeInput" accept="application/pdf" />
+              <button onclick="analyzeResumeWithAI()">🤖 Analyze with AI</button>
+
+              <div id="resumeAIResult" class="ai-result-panel" hidden></div>
+            </div>
+          </section>
+          <section id="skill-gap-analyzer" class="ai-tools-tab-panel">
+            <h2>🧠 Skill Gap Analyzer</h2>
+            <p>Compare your resume with a job description to find missing skills and get learning recommendations.</p>
+            <div class="gap-analyzer-inputs">
+              <div>
+                <label for="resumeFile">Upload Your Resume (PDF):</label>
+                <input type="file" id="resumeFile" accept="application/pdf">
+              </div>
+
+              <div class="job-description-panel">
+                <h3>💼 Job Description</h3>
+                <label for="jobSearchQuery">Job Role</label>
+                <input type="text" id="jobSearchQuery" placeholder="Teacher" />
+                <button id="autofillJobDescBtn" type="button" onclick="fetchJobDescription()">✨ Autofill Job Description</button>
+                <p id="jobDescriptionStatus" class="job-description-status" role="status" hidden></p>
+                <label for="jobDesc">AI Generated Description</label>
+                <textarea id="jobDesc" placeholder="AI-generated job description will appear here..." rows="10"></textarea>
+              </div>
+            </div>
+            <div class="resume-upload">
+              <button onclick="analyzeSkillGap()">🔍 Analyze Gaps</button>
+              <div id="gapLoading" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analyzing your resume and job description... 🔍</p>
+              </div>
+
+
+              <div id="gapResults" class="ai-result-panel" hidden></div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <section>
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- Column 1: Logo and About -->
+        <div class="footer-column">
+          <h2 class="footer-logo">Ultimate Career <span>Hub</span></h2>
+          <p>Your one-stop platform for career growth, job hunting, and interview mastery.</p>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="roadmap.html">Career Roadmap</a></li>
+            <li><a href="jobs.html">Internships & Jobs</a></li>
+            <li><a href="interview.html">Interview Prep</a></li>
+            <li><a href="resume.html">Resume Review</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Connect -->
+        <div class="footer-column">
+          <h3>Connect</h3>
+          <p>Email: <a href="mailto:support@careerhub.com">support@careerhub.com</a></p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>CopyRight &copy; 2025 Ultimate Career Hub. All rights reserved.</p>
+        <p>Devloped By - Ajay Kumar</p>
+      </div>
+
+      <button class="back-to-top" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+    </footer>
+  </section>
+  <script src="auth.js"></script>
+  <script src="main.js"></script>
+
+</body>
+
+</html>
+
